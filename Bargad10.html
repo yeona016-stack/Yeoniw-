@@ -11,7 +11,6 @@
 :root{
   --accent:#ff6f91;
   --text:#5a2a3c;
-
   --bg-slide1:linear-gradient(135deg,#fde2e4,#fff1f7);
   --bg-slide2:linear-gradient(135deg,#ffe5f0,#ffffff);
   --bg-gift1:#fff0f6;
@@ -77,7 +76,6 @@ button{
 .gift{
   width:100px;
   animation:floatGift 3s ease-in-out infinite;
-  position:relative;
 }
 
 @keyframes floatGift{
@@ -95,14 +93,6 @@ button{
 }
 
 .gift img:hover{ transform:scale(1.08); }
-
-.file-input{
-  display:none;
-}
-
-.glow{
-  box-shadow:0 0 20px #ff9acb, 0 0 35px #ffc1e3;
-}
 
 .gift-content{
   display:none;
@@ -154,35 +144,40 @@ button{
   <div class="gifts">
 
     <div class="gift">
-      <input type="file" accept="image/*" class="file-input" id="file1" onchange="changeThumbnail(event,1)">
-      <img id="thumb1" src="1000049646.jpg" onclick="openGift(1)">
+      <img src="1000049646.jpg" onclick="openGift(1)">
     </div>
 
     <div class="gift">
-      <input type="file" accept="image/*" class="file-input" id="file2" onchange="changeThumbnail(event,2)">
-      <img id="thumb2" src="1000049647.jpg" onclick="openGift(2)">
+      <img src="1000049647.jpg" onclick="openGift(2)">
     </div>
 
     <div class="gift">
-      <input type="file" accept="image/*" class="file-input" id="file3" onchange="changeThumbnail(event,3)">
-      <img id="thumb3" src="1000049645.jpg" onclick="openGift(3)">
+      <img src="1000049645.jpg" onclick="openGift(3)">
     </div>
 
   </div>
 </div>
 
 <div class="gift-content" id="gift1">
-  <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/0Q9rHyEG7lME4y2Fqtuxgl" width="100%" height="152" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+  <iframe style="border-radius:12px"
+  src="https://open.spotify.com/embed/track/0Q9rHyEG7lME4y2Fqtuxgl"
+  width="100%" height="152"
+  frameborder="0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
+  </iframe>
 </div>
 
 <div class="gift-content" id="gift2">
-  <div class="letter" contenteditable="true" id="loveLetter">Write your love letter here 💌</div>
+  <div class="letter">
+    my cutest sweetest pookie wookie sweetie pie sugar cube ever,
+    I LOVE the way you smile, the way you laugh, the way you talk.
+    I'll always be grateful to have you in my life!
+    Happy Valentine's Day my sweetheart. 💖
+  </div>
 </div>
 
 <div class="gift-content" id="gift3">
-  <input type="file" accept="image/*,video/*" onchange="loadMedia(event)">
-  <img style="width:100%; border-radius:15px; display:none;">
-  <video muted loop style="width:100%; border-radius:15px; display:none;"></video>
+  <img src="1000049744.jpg" style="width:100%; border-radius:15px;">
 </div>
 
 </div>
@@ -211,69 +206,6 @@ function openGift(n){
   document.getElementById('gift'+n).style.display='block';
 }
 
-function changeThumbnail(e,num){
-  const file=e.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=function(event){
-    const data=event.target.result;
-    document.getElementById('thumb'+num).src=data;
-    localStorage.setItem('thumb'+num,data);
-  };
-  reader.readAsDataURL(file);
-}
-
-const letter=document.getElementById("loveLetter");
-letter.addEventListener("input",()=>{
-  localStorage.setItem("savedLetter",letter.innerHTML);
-});
-
-function loadMedia(e){
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(event){
-    const mediaData = event.target.result;
-    const img = document.querySelector('#gift3 img');
-    const vid = document.querySelector('#gift3 video');
-    if(file.type.startsWith("video")){
-      vid.src = mediaData;
-      vid.style.display = "block";
-      img.style.display = "none";
-      localStorage.setItem("gift3Type", "video");
-    }else{
-      img.src = mediaData;
-      img.style.display = "block";
-      vid.style.display = "none";
-      localStorage.setItem("gift3Type", "image");
-    }
-    localStorage.setItem("gift3Data", mediaData);
-  };
-  reader.readAsDataURL(file);
-}
-
-window.onload=function(){
-  const savedLetter=localStorage.getItem("savedLetter");
-  if(savedLetter) letter.innerHTML=savedLetter;
-
-  for(let i=1;i<=3;i++){
-    const savedThumb=localStorage.getItem('thumb'+i);
-    if(savedThumb) document.getElementById('thumb'+i).src=savedThumb;
-  }
-
-  const savedData=localStorage.getItem("gift3Data");
-  const savedType=localStorage.getItem("gift3Type");
-  if(savedData){
-    const img=document.querySelector('#gift3 img');
-    const vid=document.querySelector('#gift3 video');
-    if(savedType==="video"){
-      vid.src=savedData; vid.style.display="block";
-    }else{
-      img.src=savedData; img.style.display="block";
-    }
-  }
-};
-
 function heartShower(){
   for(let i=0;i<35;i++){
     const h=document.createElement('div');
@@ -284,18 +216,6 @@ function heartShower(){
     setTimeout(()=>h.remove(),5000);
   }
 }
-
-// Double tap to change thumbnail
-let lastTap=0;
-document.querySelectorAll('.gift img').forEach((img,index)=>{
-  img.addEventListener('click',function(e){
-    const now=new Date().getTime();
-    if(now-lastTap<300){
-      document.getElementById('file'+(index+1)).click();
-    }
-    lastTap=now;
-  });
-});
 </script>
 
 </body>
